@@ -21,23 +21,20 @@ class Paket extends CI_Controller {
         $id_user = isset($user_sess['id_user']) ? $user_sess['id_user'] : "";
 
         $crud->set_theme('adminlte');
-        $crud->set_table('paket');        
-        $crud->set_subject('Data Paket');
+        $crud->set_table('produk');        
+        $crud->set_subject('Data Produk');
         $crud->set_language('indonesian');
         
-        $crud->columns('nama_paket','durasi_paket','deskripsi_paket','harga_paket','status_paket');                 
+        $crud->columns('nama_produk','fasilitas','hak_calon_jamaah','syaray_ketentuan','deskripsi_produk','harga_produk','foto_produk');                 
         
-        $crud->display_as('nama_paket','Nama')             
-             ->display_as('deskripsi_paket','Deskripsi')             
-             ->display_as('harga_paket','Harga')             
-             ->display_as('status_paket','Status');             
+        $crud->display_as('nama_produk','Nama')             
+             ->display_as('deskripsi_produk','Deskripsi');             
 
-        // $crud->callback_field('deskripsi_paket',array($this,'clearhtml'));
-        $crud->field_type('harga_paket','integer');
-        $crud->unset_add_fields('status_paket');        
+        $crud->field_type('harga_produk','integer');
         // $crud->unset_texteditor(array('deskripsi_paket','full_text'));                
-        $crud->required_fields('nama_paket','deskripsi_paket','harga');                
-        $crud->callback_delete(array($this,'delete_data'));    
+        $crud->set_field_upload('foto_produk','api/assets/produk');        
+        $crud->required_fields('nama_produk');                
+        // $crud->callback_delete(array($this,'delete_data'));    
         $data = $crud->render();
         $data->id_user = $id_user;
         $data->level = $level;
