@@ -42,7 +42,7 @@
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="testimoni"): ?>
 										 class="nav-active"
 									<?php endif ?>>
-										<a href="<?php echo base_url('pengaduan/index'); ?>">
+										<a href="<?php echo base_url('testimoni/index'); ?>">
 											<i class="fa fa-comments-o" aria-hidden="true"></i>
 											<span>Testimoni</span>
 										</a>
