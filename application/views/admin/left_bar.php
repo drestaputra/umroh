@@ -31,6 +31,14 @@
 											<span>Produk</span>
 										</a>
 									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="agen"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('agen/index'); ?>">
+											<i class="fa fa-users" aria-hidden="true"></i>
+											<span>Agen</span>
+										</a>
+									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="artikel"): ?>
 										 class="nav-active"
 									<?php endif ?>>
@@ -45,6 +53,22 @@
 										<a href="<?php echo base_url('testimoni/index'); ?>">
 											<i class="fa fa-comments-o" aria-hidden="true"></i>
 											<span>Testimoni</span>
+										</a>
+									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="manasik"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('manasik/index'); ?>">
+											<i class="fa fa-book" aria-hidden="true"></i>
+											<span>Manasik</span>
+										</a>
+									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="itinerary"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('itinerary/index'); ?>">
+											<i class="fa fa-plane" aria-hidden="true"></i>
+											<span>Itinerary</span>
 										</a>
 									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="slider"): ?>
