@@ -63,6 +63,14 @@
 											<span>Artikel</span>
 										</a>
 									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="doa"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('doa/index'); ?>">
+											<i class="fa fa-hand-stop-o" aria-hidden="true"></i>
+											<span>Doa</span>
+										</a>
+									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="jadwal"): ?>
 										 class="nav-active"
 									<?php endif ?>>
@@ -93,6 +101,14 @@
 										<a href="<?php echo base_url('manasik/index'); ?>">
 											<i class="fa fa-book" aria-hidden="true"></i>
 											<span>Manasik</span>
+										</a>
+									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="faq"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('faq/index'); ?>">
+											<i class="fa fa-question-circle" aria-hidden="true"></i>
+											<span>FAQ</span>
 										</a>
 									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="itinerary"): ?>
