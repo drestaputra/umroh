@@ -121,7 +121,7 @@ class Mandroid extends CI_Model {
 		if ($insert) {
 			$this->load->model('Mmail');
 			$data_email['token']=$token;
-			$data_email['base_url'] = base_url();
+			$data_email['base_url'] = "https://android.almakwatour.com/";
 			$message = $this->load->view('template_email_forget_password', $data_email, TRUE);			
 			$this->Mmail->kirim_email($email,"Almawa Tour And Travel","Permintaan Perubahaan Password",$message);
 		}
