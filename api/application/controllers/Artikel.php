@@ -23,7 +23,7 @@ class Artikel extends Rest_Controller {
         $data = $this->function_lib->findAll('1', 'artikel', 'id_artikel desc');
         foreach ($data as $key => $value) {
 	        $data[$key]['isi_artikel'] = isset($value['isi_artikel']) ?  html_entity_decode($value['isi_artikel']) : "";
-	        $data[$key]['foto_artikel'] = isset($value['foto_artikel']) ?  base_url('assets/artikel/').$value['foto_artikel'] : "";
+	        $data[$key]['gambar_artikel'] = isset($value['gambar_artikel']) ?  base_url('assets/artikel/').$value['gambar_artikel'] : "";
         }
         $json_data = array(
         	'status'=>$status,
@@ -42,7 +42,7 @@ class Artikel extends Rest_Controller {
         $data = $this->function_lib->get_row('artikel','id_artikel='.$this->db->escape($id_artikel).'');
         if ($data != null) {
 		    $data['isi_artikel'] = isset($data['isi_artikel']) ?  html_entity_decode($data['isi_artikel']) : "";
-		    $data['foto_artikel'] = isset($data['foto_artikel']) ?  base_url('assets/artikel/').$data['foto_artikel'] : "";
+		    $data['gambar_artikel'] = isset($data['gambar_artikel']) ?  base_url('assets/artikel/').$data['gambar_artikel'] : "";
         }
 
         $json_data = array(

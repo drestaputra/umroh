@@ -22,7 +22,7 @@ class Testimoni extends Rest_Controller {
         $data = $this->function_lib->findAll('1', 'testimoni', 'id_testimoni desc');
         if ($data != null) {
             foreach ($data as $key => $value) {
-                $data[$key]['foto_tester'] = base_url('assets/testimoni/').$value['foto_tester'];
+                $data[$key]['foto_tester'] = base_url('assets/tester/').$value['foto_tester'];
             }
         }
         $json_data = array(

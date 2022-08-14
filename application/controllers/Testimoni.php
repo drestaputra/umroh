@@ -34,6 +34,7 @@ class Testimoni extends CI_Controller {
         
         
         $crud->required_fields('no_testimoni','nama_pemilik_testimoni','nama_bank');                
+        $crud->set_field_upload('foto_tester','api/assets/tester');       
         // $crud->callback_delete(array($this,'delete_data'));        
         $data = $crud->render();
         $data->id_user = $id_user;

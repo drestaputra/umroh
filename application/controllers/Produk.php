@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Paket extends CI_Controller {
+class Produk extends CI_Controller {
 
 	public function __construct()
 	{
@@ -32,7 +32,7 @@ class Paket extends CI_Controller {
 
         $crud->field_type('harga_produk','integer');
         // $crud->unset_texteditor(array('deskripsi_paket','full_text'));                
-        $crud->set_field_upload('foto_produk','api/assets/produk');        
+        $crud->set_field_upload('foto_produk','api/assets/foto_produk');        
         $crud->required_fields('nama_produk');                
         // $crud->callback_delete(array($this,'delete_data'));    
         $data = $crud->render();
@@ -52,5 +52,5 @@ class Paket extends CI_Controller {
     } 
 }
 
-/* End of file Paket.php */
-/* Location: ./application/controllers/Paket.php */
+/* End of file Produk.php */
+/* Location: ./application/controllers/Produk.php */
