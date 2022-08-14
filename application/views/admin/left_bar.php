@@ -47,6 +47,22 @@
 											<span>Artikel</span>
 										</a>
 									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="jadwal"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('jadwal/index'); ?>">
+											<i class="fa fa-calendar" aria-hidden="true"></i>
+											<span>Jadwal</span>
+										</a>
+									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="program"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('program/index'); ?>">
+											<i class="fa fa-tasks" aria-hidden="true"></i>
+											<span>Program</span>
+										</a>
+									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="testimoni"): ?>
 										 class="nav-active"
 									<?php endif ?>>

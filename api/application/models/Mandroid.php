@@ -59,16 +59,32 @@ class Mandroid extends CI_Model {
 		if ($this->form_validation->run() == TRUE) {				
 			$email = $this->input->post('email', TRUE);
 			$email = $this->security->sanitize_filename($email);
-			$cek_email = $this->function_lib->get_one('email','kolektor','status="aktif" AND email='.$this->db->escape($email).'');
-			if (!empty($cek_email)) {
+			$cek_email_agen = $this->function_lib->get_one('email','agen','email='.$this->db->escape($email).'');
+			$cek_email_jamaah = $this->function_lib->get_one('email','jamaah','email='.$this->db->escape($email).'');
+			if (!empty($cek_email_agen)) {
 				$exp_datetime = date("Y-m-d H:i:s",strtotime('+10 hours'));
 				$jam_sekarang = date("Y-m-d H:i:s",strtotime($exp_datetime));
 				$menit_lalu = date("Y-m-d H:i:s",strtotime('+590 minutes'));
 				// BETWEEN '2016-01-23 00:00:00' AND '2016-01-24 00:00:00'
 				// cek hitung batasan limit request forget password range 10 menit, limit 5 request
-				$jumlah_request = $this->function_lib->get_one('count(id_forget_password)','forget_password','email='.$this->db->escape($email).' AND jenis_user="kolektor" AND exp_datetime BETWEEN '.$this->db->escape($menit_lalu).' AND '.$this->db->escape($jam_sekarang).'');					
+				$jumlah_request = $this->function_lib->get_one('count(id_forget_password)','forget_password','email='.$this->db->escape($email).' AND jenis_user="agen" AND exp_datetime BETWEEN '.$this->db->escape($menit_lalu).' AND '.$this->db->escape($jam_sekarang).'');					
 				if (intval($jumlah_request)<5) {
-					$this->insertKode($email);
+					$this->insertKodeAgen($email);
+					$data['status']=200;									
+					$data['msg']="Email telah dikirim, silahkan cek email untuk mengubah password";	
+				}else{					
+					$data['status'] = 500;									
+					$data['msg'] = "Anda terlalu banyak melakukan request perubahan password, silahkan tunggu 10 menit lagi.";	
+				}
+			}else if (!empty($cek_email_agen)) {
+				$exp_datetime = date("Y-m-d H:i:s",strtotime('+10 hours'));
+				$jam_sekarang = date("Y-m-d H:i:s",strtotime($exp_datetime));
+				$menit_lalu = date("Y-m-d H:i:s",strtotime('+590 minutes'));
+				// BETWEEN '2016-01-23 00:00:00' AND '2016-01-24 00:00:00'
+				// cek hitung batasan limit request forget password range 10 menit, limit 5 request
+				$jumlah_request = $this->function_lib->get_one('count(id_forget_password)','forget_password','email='.$this->db->escape($email).' AND jenis_user="jamaah" AND exp_datetime BETWEEN '.$this->db->escape($menit_lalu).' AND '.$this->db->escape($jam_sekarang).'');					
+				if (intval($jumlah_request)<5) {
+					$this->insertKodeJamaah($email);
 					$data['status']=200;									
 					$data['msg']="Email telah dikirim, silahkan cek email untuk mengubah password";	
 				}else{					
@@ -85,18 +101,18 @@ class Mandroid extends CI_Model {
 		}		
 		return $data;					
 	}
-	function insertKode($email){
-		$id_user = $this->function_lib->get_one('id_kolektor','kolektor','email='.$this->db->escape($email).'');
+	function insertKodeAgen($email){
+		$id_user = $this->function_lib->get_one('id_agen','agen','email='.$this->db->escape($email).'');
 		$configKey = "3mai1f0rg3t";
 		$exp_datetime = date("Y-m-d H:i:s",strtotime('+10 hours'));
 		$token = hash('sha512', $email . $configKey . $exp_datetime);
 		$this->db->set('is_active','0');
 		$this->db->where('email', $email);
-		$this->db->where('jenis_user', "kolektor");
+		$this->db->where('jenis_user', "agen");
 		$this->db->update('forget_password');
 		$columnInsert = array(
 			"email" => $email,
-			"jenis_user" => "kolektor",
+			"jenis_user" => "agen",
 			"id_user" => $id_user,
 			"token" => $token,
 			"exp_datetime" => $exp_datetime
@@ -105,9 +121,35 @@ class Mandroid extends CI_Model {
 		if ($insert) {
 			$this->load->model('Mmail');
 			$data_email['token']=$token;
-			$data_email['base_url'] = "https://demo.artakita.com/";
+			$data_email['base_url'] = base_url();
 			$message = $this->load->view('template_email_forget_password', $data_email, TRUE);			
-			$this->Mmail->kirim_email($email,"Koperasi Artakita","Permintaan Perubahaan Password",$message);
+			$this->Mmail->kirim_email($email,"Almawa Tour And Travel","Permintaan Perubahaan Password",$message);
+		}
+		
+	}
+	function insertKodeJamaah($email){
+		$id_user = $this->function_lib->get_one('id_jamaah','jamaah','email='.$this->db->escape($email).'');
+		$configKey = "3mai1f0rg3t";
+		$exp_datetime = date("Y-m-d H:i:s",strtotime('+10 hours'));
+		$token = hash('sha512', $email . $configKey . $exp_datetime);
+		$this->db->set('is_active','0');
+		$this->db->where('email', $email);
+		$this->db->where('jenis_user', "jamaah");
+		$this->db->update('forget_password');
+		$columnInsert = array(
+			"email" => $email,
+			"jenis_user" => "jamaah",
+			"id_user" => $id_user,
+			"token" => $token,
+			"exp_datetime" => $exp_datetime
+		);
+		$insert = $this->db->insert('forget_password', $columnInsert);
+		if ($insert) {
+			$this->load->model('Mmail');
+			$data_email['token']=$token;
+			$data_email['base_url'] = base_url();
+			$message = $this->load->view('template_email_forget_password', $data_email, TRUE);			
+			$this->Mmail->kirim_email($email,"Almawa Tour And Travel","Permintaan Perubahaan Password",$message);
 		}
 		
 	}

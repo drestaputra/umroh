@@ -64,10 +64,11 @@ class Login extends REST_Controller  {
 		$forget = $this->Mandroid->forget_password();
 		$status = isset($forget['status']) ? $forget['status'] : 500;
 		$msg = isset($forget['msg']) ? $forget['msg'] : "";
-		$this->response(array(
-			"status" => $status,
-			"msg" =>$msg
-		));
+		$json_data = array(
+        	'status'=>$status,
+        	'msg'=>$msg,
+        	'data' => $data);
+		$this->response($json_data);    
 	}
 
 }

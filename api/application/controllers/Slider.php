@@ -16,7 +16,7 @@ class Slider extends Rest_Controller {
         $this->load->model('Mslider');       
     }
 
-    public function data_slider_post()
+    public function index_get()
     {
         $params = isset($_POST) ? $_POST : array();
         $start = (int)$this->input->post('page');
@@ -34,7 +34,7 @@ class Slider extends Rest_Controller {
         $totalPage=ceil($total/$perPage)-1;
         }else{$totalPage=0;}
         foreach ($response as $key => $value) {
-            $response[$key]['image_slider'] = base_url('assets/slider/').$value['image_slider'];
+            $response[$key]['foto_slider'] = base_url('assets/slider/').$value['foto_slider'];
         }
         $json_data = array('status'=>$status,'msg'=>$msg,'page' => $start,'totalPage'=>$totalPage, 'recordsFiltered' => ((int)$this->input->post('perPage')>0)?$this->input->post('perPage'):$total, 'totalRecords' => $total, 'data' => $response);
 
