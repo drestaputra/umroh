@@ -8,7 +8,7 @@ use Restserver\Libraries\REST_Controller;
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 
-class Produk extends Rest_Controller {
+class Haji_plus extends Rest_Controller {
 
 	function __construct($config = 'rest') {
         parent::__construct($config);
@@ -20,11 +20,10 @@ class Produk extends Rest_Controller {
     {
         $status = 200;
         $msg = "OK";
-        $id_produk = $this->input->post('id_produk');
-        $data = $this->function_lib->findAll('1', 'produk', 'id_produk desc');
+        $data = $this->function_lib->get_row('haji_plus', '1');
         // if ($data != null) {
 	       //  foreach ($data as $key => $value) {
-		      //   $data[$key]['harga_produk'] = isset($value['harga_produk']) ?   $this->function_lib->toRupiah($value['harga_produk']) : "";
+		      //   $data[$key]['harga_haji_plus'] = isset($value['harga_haji_plus']) ?   $this->function_lib->toRupiah($value['harga_haji_plus']) : "";
 		      //   $data[$key]['harga_coret'] = isset($value['harga_coret']) ?  $this->function_lib->toRupiah($value['harga_coret']) : "";
 	       //  }
         // }
@@ -41,11 +40,11 @@ class Produk extends Rest_Controller {
     {
         $status = 200;
         $msg = "OK";
-        $id_produk = $this->input->post('id_produk');
-        $data = $this->function_lib->findAll('id_produk in (SELECT id_produk from manasik)', 'produk', 'id_produk desc');
+        $id_haji_plus = $this->input->post('id_haji_plus');
+        $data = $this->function_lib->findAll('id_haji_plus in (SELECT id_haji_plus from manasik)', 'haji_plus', 'id_haji_plus desc');
         // if ($data != null) {
            //  foreach ($data as $key => $value) {
-              //   $data[$key]['harga_produk'] = isset($value['harga_produk']) ?   $this->function_lib->toRupiah($value['harga_produk']) : "";
+              //   $data[$key]['harga_haji_plus'] = isset($value['harga_haji_plus']) ?   $this->function_lib->toRupiah($value['harga_haji_plus']) : "";
               //   $data[$key]['harga_coret'] = isset($value['harga_coret']) ?  $this->function_lib->toRupiah($value['harga_coret']) : "";
            //  }
         // }
@@ -58,19 +57,19 @@ class Produk extends Rest_Controller {
 
     }
 
-    public function detail_produk_post()
+    public function detail_haji_plus_post()
     {    
         $status = 200;
         $msg = "OK";
-        $id_produk = $this->input->post('id_produk');
+        $id_haji_plus = $this->input->post('id_haji_plus');
         
         
-        $data = $this->function_lib->get_row('produk','id_produk='.$this->db->escape($id_produk).'');
+        $data = $this->function_lib->get_row('haji_plus','id_haji_plus='.$this->db->escape($id_haji_plus).'');
         if ($data != null) {
-        	$id_produk = isset($data['id_produk']) ? $data['id_produk'] : $id_produk;
-        	$data = $this->function_lib->get_row('produk','id_produk='.$this->db->escape($id_produk).'');
-		    $data['isi_produk'] = isset($data['isi_produk']) ?  html_entity_decode($data['isi_produk']) : "";
-		    $data['foto_produk'] = isset($data['foto_produk']) ?  base_url('assets/produk/').$data['foto_produk'] : "";
+        	$id_haji_plus = isset($data['id_haji_plus']) ? $data['id_haji_plus'] : $id_haji_plus;
+        	$data = $this->function_lib->get_row('haji_plus','id_haji_plus='.$this->db->escape($id_haji_plus).'');
+		    $data['isi_haji_plus'] = isset($data['isi_haji_plus']) ?  html_entity_decode($data['isi_haji_plus']) : "";
+		    $data['foto_haji_plus'] = isset($data['foto_haji_plus']) ?  base_url('assets/haji_plus/').$data['foto_haji_plus'] : "";
         }
 
         $json_data = array(
@@ -83,5 +82,5 @@ class Produk extends Rest_Controller {
 
 }
 
-/* End of file Produk.php */
-/* Location: ./application/controllers/android/Produk.php */
+/* End of file Haji_plus.php */
+/* Location: ./application/controllers/android/Haji_plus.php */

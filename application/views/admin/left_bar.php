@@ -31,12 +31,28 @@
 											<span>Produk</span>
 										</a>
 									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="haji_plus"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('haji_plus/index'); ?>">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+											<span>haji Plus</span>
+										</a>
+									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="agen"): ?>
 										 class="nav-active"
 									<?php endif ?>>
 										<a href="<?php echo base_url('agen/index'); ?>">
 											<i class="fa fa-users" aria-hidden="true"></i>
 											<span>Agen</span>
+										</a>
+									</li>
+									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="jamaah"): ?>
+										 class="nav-active"
+									<?php endif ?>>
+										<a href="<?php echo base_url('jamaah/index'); ?>">
+											<i class="fa fa-users" aria-hidden="true"></i>
+											<span>Jamaah</span>
 										</a>
 									</li>
 									<li <?php if (isset($url1) AND trim($url1)!="" AND $url1=="artikel"): ?>

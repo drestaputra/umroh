@@ -13,7 +13,6 @@ class Artikel extends Rest_Controller {
 	function __construct($config = 'rest') {
         parent::__construct($config);
         $this->load->database();
-        $this->load->model('Martikel');       
     }
 
     public function index_get()
