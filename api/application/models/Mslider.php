@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mslider extends CI_Model {
 
 
-    public function data_slider($params,$custom_select='',$count=false,$additional_where='', $order_by="judul_slider ASC")
+    public function data_slider($params,$custom_select='',$count=false,$additional_where='', $order_by="id_slider DESC")
     {
         
         $where_detail=' ';
