@@ -3,25 +3,40 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mandroid extends CI_Model {
 
-	function cek_login_kolektor(){		
+	function cek_login(){		
 		$username=$this->input->post('username',TRUE);
 		$password=$this->input->post('password',TRUE);
-		$password = hash('sha512',$password . config_item('encryption_key'));        
+		$password = hash('sha512',$this->security->sanitize_filename($password) . config_item('encryption_key'));        
 		
-		$where="username=".$this->db->escape($username)." AND password=".$this->db->escape($password)." AND status='aktif'";
+		$where="username=".$this->db->escape($username)." AND password=".$this->db->escape($password)." ";
 		$this->db->where($where);
-		$query=$this->db->get('kolektor');		
-		$jumlah_cocok=$query->num_rows();
-		$data_kolektor=array();
-		if ($jumlah_cocok!=0) {
+		$query_agen=$this->db->get('agen');		
+		$query_jamaah=$this->db->get('jamaah');		
+		$jumlah_cocok_agen = $query_agen->num_rows();
+		$jumlah_cocok_jamaah = $query_jamaah->num_rows();
+		$data_user=array();
+		if ($jumlah_cocok_agen != 0) {
+			$data_user_agen = $query_agen->row_array();
+			$data_user = array(
+				"id_agen" => $data_user_agen['id_agen'],
+				"username" => $data_user_agen['username']
+			);
 			$status=200;
 			$msg="Berhasil Login";
-			$data_kolektor=$query->row_array();
+		}else if ($jumlah_cocok_jamaah != 0) {
+			$data_user_jamaah = $query_jamaah->row_array();
+			$data_user = array(
+				"id_jamaah" => $data_user_jamaah['id_jamaah'],
+				"username" => $data_user_jamaah['username']
+			);
+			$status=200;
+			$msg="Berhasil Login";
+		
 		}else{
 			$status=500;
 			$msg="Username atau password salah";
 		}
-		return array("status"=>$status,"msg"=>$msg,"data"=> $data_kolektor);
+		return array("status"=>$status,"msg"=>$msg,"data"=> $data_user);
 		
 	}
 	
@@ -76,7 +91,7 @@ class Mandroid extends CI_Model {
 					$data['status'] = 500;									
 					$data['msg'] = "Anda terlalu banyak melakukan request perubahan password, silahkan tunggu 10 menit lagi.";	
 				}
-			}else if (!empty($cek_email_agen)) {
+			}else if (!empty($cek_email_jamaah)) {
 				$exp_datetime = date("Y-m-d H:i:s",strtotime('+10 hours'));
 				$jam_sekarang = date("Y-m-d H:i:s",strtotime($exp_datetime));
 				$menit_lalu = date("Y-m-d H:i:s",strtotime('+590 minutes'));

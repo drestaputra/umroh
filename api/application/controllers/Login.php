@@ -29,7 +29,7 @@ class Login extends REST_Controller  {
 
     }
 
-	public function kolektor_post(){
+	public function user_post(){
 		$this->load->library('form_validation');
 		$response=array("status"=>500,"msg"=>"Gagal Login");
 		$post=$this->input->post();
@@ -38,7 +38,7 @@ class Login extends REST_Controller  {
 			$this->form_validation->set_rules('password', 'Password', 'trim|required');
 			if ($this->form_validation->run() == TRUE) {
 				$this->load->model('Mandroid');								
-				$hasil=$this->Mandroid->cek_login_kolektor();
+				$hasil=$this->Mandroid->cek_login();
 				if ($hasil['status']==200) {
 					$response["status"]=200;
 					$response["msg"]=$hasil['msg'];
@@ -64,6 +64,7 @@ class Login extends REST_Controller  {
 		$forget = $this->Mandroid->forget_password();
 		$status = isset($forget['status']) ? $forget['status'] : 500;
 		$msg = isset($forget['msg']) ? $forget['msg'] : "";
+		$data = isset($forget['data']) ? $forget['data'] : null;
 		$json_data = array(
         	'status'=>$status,
         	'msg'=>$msg,
