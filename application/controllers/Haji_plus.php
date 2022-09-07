@@ -30,6 +30,7 @@ class Haji_plus extends CI_Controller {
         $crud->columns('nama_haji_plus','biaya_sudah_termasuk','biaya_tidak_termasuk','syarat_ketentuan','deskripsi_haji_plus','harga_haji_plus','foto_haji_plus');                 
         
         $crud->display_as('nama_haji_plus','Judul')             
+             ->display_as('biaya_tidak_termasuk','Hak Calon Jamaah')             
              ->display_as('deskripsi_haji_plus','Deskripsi');             
 
         $crud->field_type('harga_haji_plus','integer');

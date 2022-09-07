@@ -9,25 +9,17 @@ class Mmail extends CI_Model {
 		$mail->SMTPDebug = 0;                               
 	//Set PHPMailer to use SMTP.
 	$mail->isSMTP();            
-	// For most clients expecting the Priority header:
-	// 1 = High, 2 = Medium, 3 = Low
-	$mail->Priority = 1;
-	// MS Outlook custom header
-	// May set to "Urgent" or "Highest" rather than "High"
-	$mail->AddCustomHeader("X-MSMail-Priority: High");
-	// Not sure if Priority will also set the Importance header:
-	$mail->AddCustomHeader("Importance: High");
 	//Set SMTP host name                          
-	$mail->Host = "ssl://mail.artakita.com"; //host mail server	
+	$mail->Host = "ssl://mail.almakwatour.com"; //host mail server	
 	$mail->SMTPAuth = true;                          	
-	$mail->Username = "cs@artakita.com";   //nama-email smtp          
-	$mail->Password = "cs123arta!@#kita";           //password email smtp		
+	$mail->Username = "cs@almakwatour.com";   //nama-email smtp          
+	$mail->Password = "cs123almakwa!@#tour";           //password email smtp		
 	$mail->SMTPSecure = "ssl";                           
 	//Set TCP port to connect to 
 	$mail->Port = 465;                                   
 
-	$mail->From = "cs@artakita.com"; //email pengirim
-	$mail->FromName = "Customer Service Artakita"; //nama pengirim
+	$mail->From = "cs@almakwatour.com"; //email pengirim
+	$mail->FromName = "Customer Service Almawa Tour"; //nama pengirim
 
 	 $mail->addAddress($to, $to_name); //email penerima
 

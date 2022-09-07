@@ -33,12 +33,13 @@ class Agen extends CI_Controller {
         $operation = $crud->getState();
         $crud->callback_column('Laporan',array($this,'link_laporan'));        
         
-        $crud->required_fields('nama_agen','foto_ktp_agen','foto_agen','username','password');
+        $crud->required_fields('nama_agen','username','password');
         $crud->unset_texteditor(array('alamat','alamat'));
         $crud->unset_fields('notif_app_id','password');
         $crud->unset_columns('notif_app_id','password');
         $crud->set_field_upload('foto_agen','api/assets/foto_agen');
         $crud->set_field_upload('foto_ktp_agen','api/assets/foto_ktp_agen');
+        $crud->change_field_type('jenis_kelamin', 'dropdown', array('Laki-laki' => 'Laki-laki','Perempuan' => 'Perempuan'));
         $data = $crud->render();
         $data->id_user = $id_user;
         $data->level = $level;

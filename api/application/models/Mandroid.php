@@ -196,11 +196,11 @@ class Mandroid extends CI_Model {
 	// 	$this->db->update('lupass', $data_update_lupass);
 	// 	return array("status"=>200,"msg"=>"Berhasil mengubah password, silahkan login");
 	// }
-	function validasi_daftar(){
+	function validasi_daftar_agen(){
 		$status=200;
 		$msg="";
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('nama_lengkap', 'Nama Lengkap', 'trim|required|min_length[3]|max_length[100]',
+		$this->form_validation->set_rules('nama_agen', 'Nama Lengkap', 'trim|required|min_length[3]|max_length[100]',
 			 array(
                 'required'      => '%s masih kosong',
                 'max_length'	=> '%s maksimal 100 karakter',
@@ -216,13 +216,13 @@ class Mandroid extends CI_Model {
                 'min_length'	=> '%s minimal 1 karakter'            
         	)
 		);
-		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[kolektor.email]',
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[agen.email]',
 			array(
                 'required'      => '%s masih kosong',
                 'is_unique'     => '%s sudah terdaftar.'
         	)
 		);
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|max_length[20]|is_unique[kolektor.username]',
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|max_length[20]|is_unique[agen.username]',
 			array(
                 'required'      => '%s masih kosong',        
                 'max_length'	=> '%s maksimal 20 karakter',
@@ -236,7 +236,17 @@ class Mandroid extends CI_Model {
                 'max_length'	=> '%s maksimal 40 karakter',
                 'min_length'	=> '%s minimal 6 karakter'            
         	)
-		);				
+		);		
+		// $this->form_validation->set_rules('foto_ktp_agen', 'Foto KTP Agen', 'required',
+		// 	 array(
+  //               'required'      => '%s masih kosong',
+  //       	)
+		// );		
+		// $this->form_validation->set_rules('foto_agen', 'Foto Agen', 'required',
+		// 	 array(
+  //               'required'      => '%s masih kosong',
+  //       	)
+		// );		
 		if ($this->form_validation->run() == TRUE) {
 			$status=200;
 			$msg="Berhasil";
@@ -246,19 +256,235 @@ class Mandroid extends CI_Model {
 		}
 		return array("status"=>$status,"msg"=>$msg);
 	}
-	function daftar(){
+	function daftar_agen(){
 		$data_kolektor=null;
-		 $validasi=$this->validasi_daftar();
+		 $validasi=$this->validasi_daftar_agen();
+		 $status = isset($validasi['status']) ? $validasi['status'] : 500;
+		 $msg = isset($validasi['msg']) ? $validasi['msg'] : 500;
 		 if ($validasi['status']==200) {
-		 	$post=$this->input->post();
-		 	$post['password']=sha1($post['password']);
-		 	$this->db->insert('kolektor', $post);
-		 	$id_kolektor=$this->db->insert_id();
-		 	if (trim($id_kolektor)) {		 		
-		 		$data_kolektor=$this->function_lib->get_row('kolektor','id_kolektor="'.$id_kolektor.'"');
-		 	}
+			$post=$this->input->post();
+			$post['password'] = isset($post['password']) ? $post['password'] : "";
+			$post['password'] = hash('sha512',$this->security->sanitize_filename($post['password']) . config_item('encryption_key'));
+
+		 	$UploadKtp = $this->upload_ktp_agen();
+		 	$dataUploadKtp = isset($UploadKtp['data']) ? $UploadKtp['data'] : array();
+		 	$UploadFoto = $this->upload_foto_agen();
+		 	$dataUploadFoto = isset($UploadFoto['data']) ? $UploadFoto['data'] : array();
+		 	$msgUploadKtp = isset($UploadKtp['error']) ? $UploadKtp['error'] : "";
+		 	$fotoKtp = isset($dataUploadKtp['file_name']) ? $dataUploadKtp['file_name'] : " \n";
+		 	$fotoName = isset($dataUploadFoto['file_name']) ? $dataUploadFoto['file_name'] : " \n";
+		 	$msgUploadFoto = isset($UploadFoto['error']) ? $UploadFoto['error'] : "";
+
+		 	$input_data = array(
+		 		"nama_agen" => isset($post['nama_agen']) ? $post['nama_agen'] : "",
+		 		"notif_app_id" => isset($post['notif_app_id']) ? $post['notif_app_id'] : "",
+		 		"tempat_lahir" => isset($post['tempat_lahir']) ? $post['tempat_lahir'] : "",
+		 		"tgl_lahir" => isset($post['tgl_lahir']) ? date("Y-m-d", strtotime($post['tgl_lahir'])) : "",
+		 		"jenis_kelamin" => isset($post['jenis_kelamin']) ? $post['jenis_kelamin'] : "",
+		 		"alamat" => isset($post['alamat']) ? $post['alamat'] : "",
+		 		"no_hp" => isset($post['no_hp']) ? $post['no_hp'] : "",
+		 		"pekerjaan" => isset($post['pekerjaan']) ? $post['pekerjaan'] : "",
+		 		"email" => isset($post['email']) ? $post['email'] : "",
+		 		"no_rekening" => isset($post['no_rekening']) ? $post['no_rekening'] : "",
+		 		"bank_agen" => isset($post['bank_agen']) ? $post['bank_agen'] : "",
+		 		"username" => isset($post['username']) ? $post['username'] : "",
+		 		"password" => isset($post['password']) ? $post['password'] : "",
+		 		"foto_agen" => isset($fotoName) ? $fotoName : "",
+		 		"foto_ktp_agen" => isset($fotoKtp) ? $fotoKtp : "",
+		 	);
+		 
+		 	$this->db->insert('agen', $input_data);
+			$status = 200;
+			$msg = "Berhasil daftar. ".$msgUploadFoto.$msgUploadKtp;
+		
+		 	
 		 }
-		 return array("status"=>$validasi['status'],"msg"=>$validasi['msg'],"data"=>$data_kolektor);
+		 return array("status"=>$status,"msg"=>$msg);
+	}
+
+	function upload_ktp_agen(){
+		$config['upload_path'] = './assets/foto_ktp_agen/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']  = '7000';
+		$config['file_name'] = time();
+		$error = "";
+		$upload_data = array();
+		$this->load->library('upload', $config, 'fotoKtpAgen');
+		$this->fotoKtpAgen->initialize($config);
+		if (!$this->fotoKtpAgen->do_upload('foto_ktp_agen')){
+            $error = $this->fotoKtpAgen->display_errors();
+            $upload_data = array();
+        }else{
+            $upload_data = $this->fotoKtpAgen->data();
+            $error = "";
+        }
+        return array("error"=>$error, "data" => $upload_data);
+	}
+	function upload_foto_agen(){
+		$config = array();
+		$config['upload_path'] = './assets/foto_agen/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']  = '7000';
+		$config['file_name'] = time();
+		$error = "";
+		$upload_data = array();
+		$this->load->library('upload', $config, 'fotoAgen');
+		$this->fotoAgen->initialize($config);
+		if (!$this->fotoAgen->do_upload('foto_agen')){
+            $error = $this->fotoAgen->display_errors();
+            $upload_data = array();
+        }else{
+            $upload_data = $this->fotoAgen->data();
+            $error = "";
+        }
+        return array("error"=>$error, "data" => $upload_data);
+	}
+
+	function validasi_daftar_jamaah(){
+		$status=200;
+		$msg="";
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('nama_jamaah', 'Nama Lengkap', 'trim|required|min_length[3]|max_length[100]',
+			 array(
+                'required'      => '%s masih kosong',
+                'max_length'	=> '%s maksimal 100 karakter',
+                'min_length'	=> '%s minimal 3 karakter'
+
+        	)
+		);
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('alamat', 'Alamat', 'trim|required|min_length[1]|max_length[300]',
+			 array(
+                'required'      => '%s masih kosong',    
+                'max_length'	=> '%s maksimal 300 karakter',
+                'min_length'	=> '%s minimal 1 karakter'            
+        	)
+		);
+		$this->form_validation->set_rules('email', 'Email', 'trim|required|is_unique[jamaah.email]',
+			array(
+                'required'      => '%s masih kosong',
+                'is_unique'     => '%s sudah terdaftar.'
+        	)
+		);
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[3]|max_length[20]|is_unique[jamaah.username]',
+			array(
+                'required'      => '%s masih kosong',        
+                'max_length'	=> '%s maksimal 20 karakter',
+                'min_length'	=> '%s minimal 3 karakter',
+                'is_unique'     => '%s sudah terdaftar.'
+        	)
+		);
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[40]',
+			array(
+                'required'      => '%s masih kosong',    
+                'max_length'	=> '%s maksimal 40 karakter',
+                'min_length'	=> '%s minimal 6 karakter'            
+        	)
+		);		
+		// $this->form_validation->set_rules('foto_ktp_agen', 'Foto KTP Agen', 'required',
+		// 	 array(
+  //               'required'      => '%s masih kosong',
+  //       	)
+		// );		
+		// $this->form_validation->set_rules('foto_agen', 'Foto Agen', 'required',
+		// 	 array(
+  //               'required'      => '%s masih kosong',
+  //       	)
+		// );		
+		if ($this->form_validation->run() == TRUE) {
+			$status=200;
+			$msg="Berhasil";
+		} else {
+			$status=500;
+			$msg=validation_errors(' ',' ');
+		}
+		return array("status"=>$status,"msg"=>$msg);
+	}
+
+	function daftar_jamaah(){
+		$data_kolektor=null;
+		 $validasi=$this->validasi_daftar_jamaah();
+		 $status = isset($validasi['status']) ? $validasi['status'] : 500;
+		 $msg = isset($validasi['msg']) ? $validasi['msg'] : 500;
+		 if ($validasi['status']==200) {
+			$post=$this->input->post();
+			$post['password'] = isset($post['password']) ? $post['password'] : "";
+			$post['password'] = hash('sha512',$this->security->sanitize_filename($post['password']) . config_item('encryption_key'));
+
+		 	$UploadKtp = $this->upload_ktp_jamaah();
+		 	$dataUploadKtp = isset($UploadKtp['data']) ? $UploadKtp['data'] : array();
+		 	$UploadFoto = $this->upload_foto_jamaah();
+		 	$dataUploadFoto = isset($UploadFoto['data']) ? $UploadFoto['data'] : array();
+		 	$msgUploadKtp = isset($UploadKtp['error']) ? $UploadKtp['error'] : "";
+		 	$fotoKtp = isset($dataUploadKtp['file_name']) ? $dataUploadKtp['file_name'] : " \n";
+		 	$fotoName = isset($dataUploadFoto['file_name']) ? $dataUploadFoto['file_name'] : " \n";
+		 	$msgUploadFoto = isset($UploadFoto['error']) ? $UploadFoto['error'] : "";
+
+		 	$input_data = array(
+		 		"nama_jamaah" => isset($post['nama_jamaah']) ? $post['nama_jamaah'] : "",
+		 		"notif_app_id" => isset($post['notif_app_id']) ? $post['notif_app_id'] : "",
+		 		"tempat_lahir" => isset($post['tempat_lahir']) ? $post['tempat_lahir'] : "",
+		 		"tgl_lahir" => isset($post['tgl_lahir']) ? date("Y-m-d", strtotime($post['tgl_lahir'])) : "",
+		 		"jenis_kelamin" => isset($post['jenis_kelamin']) ? $post['jenis_kelamin'] : "",
+		 		"alamat" => isset($post['alamat']) ? $post['alamat'] : "",
+		 		"no_hp" => isset($post['no_hp']) ? $post['no_hp'] : "",
+		 		"pekerjaan" => isset($post['pekerjaan']) ? $post['pekerjaan'] : "",
+		 		"email" => isset($post['email']) ? $post['email'] : "",
+		 		"no_rekening" => isset($post['no_rekening']) ? $post['no_rekening'] : "",
+		 		"bank_jamaah" => isset($post['bank_jamaah']) ? $post['bank_jamaah'] : "",
+		 		"username" => isset($post['username']) ? $post['username'] : "",
+		 		"password" => isset($post['password']) ? $post['password'] : "",
+		 		"foto_jamaah" => isset($fotoName) ? $fotoName : "",
+		 		"foto_ktp_jamaah" => isset($fotoKtp) ? $fotoKtp : "",
+		 	);
+
+		 
+		 
+		 	$this->db->insert('jamaah', $input_data);
+			$status = 200;
+			$msg = "Berhasil daftar. ".$msgUploadFoto.$msgUploadKtp;
+		
+		 	
+		 }
+		 return array("status"=>$status,"msg"=>$msg);
+	}
+
+	function upload_ktp_jamaah(){
+		$config['upload_path'] = './assets/foto_ktp_jamaah/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']  = '7000';
+		$config['file_name'] = time();
+		$error = "";
+		$upload_data = array();
+		$this->load->library('upload', $config, 'fotoKtpJamaah');
+		$this->fotoKtpJamaah->initialize($config);
+		if (!$this->fotoKtpJamaah->do_upload('foto_ktp_jamaah')){
+            $error = $this->fotoKtpJamaah->display_errors();
+            $upload_data = array();
+        }else{
+            $upload_data = $this->fotoKtpJamaah->data();
+            $error = "";
+        }
+        return array("error"=>$error, "data" => $upload_data);
+	}
+	function upload_foto_jamaah(){
+		$config = array();
+		$config['upload_path'] = './assets/foto_jamaah/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']  = '7000';
+		$config['file_name'] = time();
+		$error = "";
+		$upload_data = array();
+		$this->load->library('upload', $config, 'fotoJamaah');
+		$this->fotoJamaah->initialize($config);
+		if (!$this->fotoJamaah->do_upload('foto_jamaah')){
+            $error = $this->fotoJamaah->display_errors();
+            $upload_data = array();
+        }else{
+            $upload_data = $this->fotoJamaah->data();
+            $error = "";
+        }
+        return array("error"=>$error, "data" => $upload_data);
 	}
 
 }

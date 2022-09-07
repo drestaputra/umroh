@@ -25,19 +25,19 @@ class Slider extends CI_Controller {
         $crud->set_subject('Data Slider');
         $crud->set_language('indonesian');
         
-        $crud->columns('judul_slider','link_slider','image_slider','is_active');                 
+        $crud->columns('judul_slider','link_slider','foto_slider','is_active');                 
         
         $crud->display_as('judul_slider','Judul')             
              ->display_as('link_slider','Link')             
-             ->display_as('image_slider','Gambar')             
+             ->display_as('foto_slider','Gambar')             
              ->display_as('is_active','Status');             
 
         // $crud->callback_field('deskripsi_slider',array($this,'clearhtml'));
         $crud->unset_fields('deskripsi_slider');
         $crud->change_field_type('is_active', 'dropdown', array('0' => 'Non Aktif','1' => 'Aktif'));
-        $crud->set_field_upload('image_slider','api/assets/slider');        
+        $crud->set_field_upload('foto_slider','api/assets/slider');        
                
-        $crud->required_fields('judul_slider','image_slider');                
+        $crud->required_fields('judul_slider','foto_slider');                
         $crud->callback_delete(array($this,'delete_data'));    
         $data = $crud->render();
         $data->id_user = $id_user;
