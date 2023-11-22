@@ -10,16 +10,16 @@ class Mmail extends CI_Model {
 	//Set PHPMailer to use SMTP.
 	$mail->isSMTP();            
 	//Set SMTP host name                          
-	$mail->Host = "ssl://mail.almakwatour.com"; //host mail server	
+	$mail->Host = ""; //host mail server	
 	$mail->SMTPAuth = true;                          	
-	$mail->Username = "cs@almakwatour.com";   //nama-email smtp          
-	$mail->Password = "cs123almakwa!@#tour";           //password email smtp		
+	$mail->Username = "";   //nama-email smtp          
+	$mail->Password = "";           //password email smtp		
 	$mail->SMTPSecure = "ssl";                           
 	//Set TCP port to connect to 
 	$mail->Port = 465;                                   
 
-	$mail->From = "cs@almakwatour.com"; //email pengirim
-	$mail->FromName = "Customer Service Almawa Tour"; //nama pengirim
+	$mail->From = ""; //email pengirim
+	$mail->FromName = ""; //nama pengirim
 
 	 $mail->addAddress($to, $to_name); //email penerima
 
