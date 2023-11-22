@@ -18,7 +18,7 @@ class Mmail extends CI_Model {
 	//Set TCP port to connect to 
 	$mail->Port = 465;                                   
 
-	$mail->From = "cs@almakwatour.com"; //email pengirim
+	$mail->From = ""; //email pengirim
 	$mail->FromName = "Customer Service Almawa Tour"; //nama pengirim
 
 	 $mail->addAddress($to, $to_name); //email penerima
